@@ -1,0 +1,39 @@
+#!/bin/bash
+# Script para subir projeto para o GitHub via SSH (Termux)
+
+# ======= CONFIGURAÇÃO =======
+REPO_PATH="$HOME/caminho/do/seu/projeto"
+GITHUB_USER="fcanata61"
+REPO_NAME="Awesome"
+BRANCH="main"  # ou master, dependendo da sua branch
+USER_NAME="Seu Nome"
+USER_EMAIL="seu_email@exemplo.com"
+# ============================
+
+# Entrar na pasta do projeto
+cd "$REPO_PATH" || { echo "Pasta não encontrada!"; exit 1; }
+
+# Configurar identidade do Git
+git config --global user.name "$USER_NAME"
+git config --global user.email "$USER_EMAIL"
+
+# Inicializar o repositório (se ainda não tiver)
+git init
+
+# Adicionar arquivos
+git add .
+
+# Commit inicial
+git commit -m "Primeiro commit"
+
+# Configurar remote
+git remote set-url origin git@$GITHUB_USER:$GITHUB_USER/$REPO_NAME.git 2>/dev/null || \
+git remote add origin git@$GITHUB_USER:$GITHUB_USER/$REPO_NAME.git
+
+# Forçar a branch principal
+git branch -M $BRANCH
+
+# Enviar para o GitHub
+git push -u origin $BRANCH --force
+
+echo "✅ Projeto enviado para https://github.com/$GITHUB_USER/$REPO_NAME"
